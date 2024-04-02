@@ -155,7 +155,7 @@ class _ItemState extends State<Item> {
                          add_cart(widget.post!, "2", widget.image!, quantity.toString(), widget.title!, widget.price!);
                         },
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.green, // Button color
+                          backgroundColor:Colors.green,
                           shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.circular(20), // Rounded corners
@@ -167,8 +167,6 @@ class _ItemState extends State<Item> {
                       ),
                       SizedBox(width: 20),
                       // Spacing between button and price
-
-                    
                     ],
                   ),
                 ),
