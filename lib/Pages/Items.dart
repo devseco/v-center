@@ -147,7 +147,7 @@ class _SparePartsPageState extends State<SparePartsPage> {
                              filteredProducts[index].imageUrl,
                               height: MediaQuery.of(context).size.width / 3.5,
                               width: MediaQuery.of(context).size.width / 2.5,
-                              fit: BoxFit.fill,
+                              fit: BoxFit.contain,
                             ),
                           ),
                           ListTile(

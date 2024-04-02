@@ -45,7 +45,7 @@ class _CatsState extends State<Cats> {
         title: Text('ألاقسام'),
         centerTitle: true,
       ),
-      body: (loading)?  GridView.builder(
+      body: (items.isEmpty)?  GridView.builder(
         itemCount: 6, // عدد المرات التي ترغب في تكرار العنصر
         itemBuilder: (context, index) {
           return ShimmerPro.sized(

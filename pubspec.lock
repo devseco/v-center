@@ -65,6 +65,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  circular_bottom_navigation:
+    dependency: "direct main"
+    description:
+      name: circular_bottom_navigation
+      sha256: "1b2d35e2ad275f6bf31244d4aed0d56012ff5bc7c86d907e4de9398e4be453b3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.0"
   clock:
     dependency: transitive
     description:
@@ -121,6 +129,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+  fancy_bar:
+    dependency: "direct main"
+    description:
+      name: fancy_bar
+      sha256: "08f7aad3b8a6f164f452652fdb6987ecf1a5d145a5a3afbc03087c4436060023"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
+  fancy_bottom_navigation_plus:
+    dependency: "direct main"
+    description:
+      name: fancy_bottom_navigation_plus
+      sha256: "2fb7d5d29a9c77a48a90445c1faf891417bdf5265a9e632b97d2c1e2499ed78a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   ffi:
     dependency: transitive
     description:
@@ -469,14 +493,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  sweet_nav_bar:
-    dependency: "direct main"
-    description:
-      name: sweet_nav_bar
-      sha256: "03eed7f4fd6aee22736328493ba66565c3c4aee380720e0e0f96b0ab37feb1ea"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5"
   synchronized:
     dependency: transitive
     description:

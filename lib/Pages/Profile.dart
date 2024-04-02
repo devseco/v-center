@@ -169,7 +169,7 @@ class _ProfileState extends State<Profile> {
               )
           ),
 
-            (loading)?  ListView.builder(
+            (items.isEmpty)?  ListView.builder(
               padding: EdgeInsets.only(top: size.height / 2),
             itemCount: 5, // عدد المرات التي ترغب في تكرار العنصر
             itemBuilder: (context, index) {

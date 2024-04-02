@@ -71,7 +71,7 @@ class _CartPageState extends State<CartPage> {
       ),
       body: Column(
         children: [
-          (loading)?  Expanded(child: ListView.builder(
+          (items.isEmpty)?  Expanded(child: ListView.builder(
             itemCount: 5, // عدد المرات التي ترغب في تكرار العنصر
             itemBuilder: (context, index) {
               return ShimmerPro.generated(

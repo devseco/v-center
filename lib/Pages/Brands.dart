@@ -42,7 +42,7 @@ class _BrandsPageState extends State<BrandsPage> {
         title: Text('البراندات'),
         centerTitle: true,
       ),
-      body:  (loading)?  GridView.builder(
+      body:  (items.isEmpty)?  GridView.builder(
         itemCount: 6, // عدد المرات التي ترغب في تكرار العنصر
         itemBuilder: (context, index) {
           return ShimmerPro.sized(
