@@ -1,20 +1,17 @@
 import 'dart:convert';
 
-import 'package:ecommerce/Pages/Cart.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart' as intal;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../api/connect.dart';
 
 class Item extends StatefulWidget {
-  final String? title ;
-  final String? price ;
-  final String? post ;
-  final String? des ;
-  final String? image ;
-  const Item({required this.title ,this.des , this.image , this.price,this.post});
+  final String? id ;
+  const Item({required this.id });
 
   @override
   State<Item> createState() => _ItemState();
@@ -22,6 +19,8 @@ class Item extends StatefulWidget {
 
 int selectedIndex = 0;
 
+List items = [];
+bool loading = true;
 final List<double> prices = [
   100000
 ];
@@ -43,7 +42,28 @@ class _ItemState extends State<Item> {
       }
     });
   }
+  String formattedTotalPrice(price) {
+    final formatter = intal.NumberFormat('#,###', 'ar_IQ');
+    return formatter.format(price);
+  }
 
+  Future<void> get_Items() async {
+    var url = Uri.parse(Apis.Api + 'item.php?id='+widget.id!);
+    http.Response response = await http.get(url);
+    print(response.body);
+    var data = json.decode(response.body);
+    print(data);
+    setState(() {
+      items = data;
+      loading = false;
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    get_Items();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +86,16 @@ class _ItemState extends State<Item> {
               ),
             ],
           ),
-          body: Column(
+          body: (loading)? Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                color: Colors.green,
+                size: 100,
+              )) : Column(
             children: [
               Container(
                 height: size.height / 2.5,
-                child:  Image.network(widget.image!),
+                width: size.width,
+                child:  Image.network(items[0]['image'] , fit: BoxFit.cover,),
               ),
               SizedBox(
                 height: 10,
@@ -80,7 +105,7 @@ class _ItemState extends State<Item> {
                 child: Row(
                   children: [
                     Text(
-                      widget.title!,
+                      items[0]['title'],
                       style: TextStyle(fontSize: 20),
                     )
                   ],
@@ -90,7 +115,7 @@ class _ItemState extends State<Item> {
                 padding: EdgeInsets.only(right: 10),
                 child: Row(
                   children: [
-                    Text('${widget.price!} د.ع ',
+                    Text('${formattedTotalPrice(int.parse(items[0]['price']))} د.ع ',
                         style: TextStyle(fontSize: 20)),
                   ],
                 ),
@@ -101,7 +126,7 @@ class _ItemState extends State<Item> {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    widget.des!,
+                    items[0]['des'],
                     style: TextStyle(fontSize: 17, color: Colors.black),
                   ),
                 ),
@@ -152,7 +177,7 @@ class _ItemState extends State<Item> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                         add_cart(widget.post!, "2", widget.image!, quantity.toString(), widget.title!, widget.price!);
+                         add_cart(items[0]['id'], "2", items[0]['image'], quantity.toString(), items[0]['title'], items[0]['price']);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:Colors.green,

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart' as ints;
 import 'package:shimmer_pro/shimmer_pro.dart';
 import '../api/connect.dart';
 import 'Item.dart';
@@ -119,7 +120,6 @@ class _SparePartsPageState extends State<SparePartsPage> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 15,
                   mainAxisSpacing: 20,
-                  
                 ),
                 itemCount: filteredProducts.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -128,43 +128,45 @@ class _SparePartsPageState extends State<SparePartsPage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Item(image:filteredProducts[index].imageUrl,price: filteredProducts[index].price,
-                          title: filteredProducts[index].name , des: filteredProducts[index].des, post: filteredProducts[index].id,
+                        MaterialPageRoute(builder: (context) => Item(id: filteredProducts[index].id,
                         )),
                       );
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(25)),
                       elevation: 4,
                       child: Column(
                         children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                            child: Image.network(
-                             filteredProducts[index].imageUrl,
-                              height: MediaQuery.of(context).size.width / 3.5,
-                              width: MediaQuery.of(context).size.width / 2.5,
-                              fit: BoxFit.contain,
-                            ),
+                          Image.network(
+                            filteredProducts[index].imageUrl,
+                            height: MediaQuery.of(context).size.width / 3.5,
+                            fit: BoxFit.fill,
                           ),
                           ListTile(
-                            title:  Text(
-                              filteredProducts[index].name,
-                              style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),
+                            title:  SizedBox(
+                              //You can define in as your screen's size width,
+                              //or you can choose a double
+                              //ex:
+                              //width: 100,
+                              width: MediaQuery.of(context).size.width, //this is the total width of your screen
+                              child: Text(
+                                filteredProducts[index].name,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                             subtitle:  Text(
-                              filteredProducts[index].price + ' د.ع ',
-                              style: TextStyle(fontSize: 13,color: Colors.black45),
+                              formattedTotalPrice(int.parse(filteredProducts[index].price)) + ' د.ع ',
+                              style: TextStyle(fontSize: 15,color: Colors.black45),
                             ),
                           ),
                         ],
                       ),
                     ),
-
-
                   );
                   ;
                 },
@@ -172,5 +174,9 @@ class _SparePartsPageState extends State<SparePartsPage> {
         ],
       ),
     ));
+  }
+  String formattedTotalPrice(price) {
+    final formatter = ints.NumberFormat('#,###', 'ar_IQ');
+    return formatter.format(price);
   }
 }

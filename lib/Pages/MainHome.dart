@@ -1,9 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:suggestion_input_field/suggestion_input_field.dart';
 
 import '../api/connect.dart';
 import 'Item.dart';
@@ -13,6 +18,7 @@ class MainHome extends StatefulWidget {
   @override
   State<MainHome> createState() => _MainHomeState();
 }
+final TextEditingController _controller = TextEditingController();
 int selectedIndex = 0;
 final List<String> imgList = [
   'https://pbs.twimg.com/media/FNWKfidWQAIP3Jt.jpg:large',
@@ -62,6 +68,13 @@ final List<Map<String, dynamic>> myProducts = [
 ];
 List sliders = [];
 List items = [];
+List prodects = [];
+class Customer {
+  final String id;
+  final String name;
+  Customer({required this.id, required this.name});
+}
+Customer? selectedCustomer;
 class _MainHomeState extends State<MainHome> {
 
   Future<void> getSlider() async {
@@ -73,6 +86,7 @@ class _MainHomeState extends State<MainHome> {
       setState(() {
         sliders = data[0]['sliders'];
         items = data[0]['items'];
+        prodects = data[0]['search'];
       });
     } else {
       setState(() {
@@ -87,6 +101,19 @@ class _MainHomeState extends State<MainHome> {
     super.initState();
     getSlider();
   }
+  FutureOr<List<Customer>> fetchCustomerData(String filterText) async {
+    // تحويل قائمة المنتجات إلى قائمة من العملاء بناءً على بنية البيانات
+    List<Customer> customers = prodects.map((product) {
+      return Customer(id: product['id'], name: product['title']);
+    }).toList();
+
+    // تطبيق عملية البحث على العملاء
+    return customers
+        .where((customer) =>
+        customer.name.toLowerCase().contains(filterText.toLowerCase()))
+        .toList();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -95,19 +122,42 @@ class _MainHomeState extends State<MainHome> {
       children: [
         Padding(
             padding: EdgeInsets.all(10),
-            child: TextField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search),
-                // Search icon inside the input field
-                hintText: "بحث ...",
-                // Placeholder text
-                border: InputBorder.none,
-                // Removes the border
-                hintStyle: TextStyle(
-                  color: Color(0xFFBDBDBD).withOpacity(1.0),
+            child:  SuggestionTextField<Customer>(
+
+
+
+              value: selectedCustomer,
+              suggestionFetch: (textEditingValue) =>
+                  fetchCustomerData(textEditingValue.text),
+
+              textFieldContent: TextFieldContent(
+                decoration: const InputDecoration(
+                  labelText: 'اختار المنتج',
                 ),
               ),
-            )),
+              displayStringForOption: (option) => option.name,
+              onSelected: (option) {
+                setState(() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Item(id: option.id,
+                    )),
+                  );
+                  selectedCustomer = option;
+
+                });
+              },
+
+              onClose: () {
+                setState(() {
+
+                  selectedCustomer = null;
+                  fetchCustomerData('');
+                });
+
+              },
+            ),
+        ),
         (sliders.isNotEmpty)? SizedBox(
           width: size.width ,
           child: CarouselSlider(
@@ -161,10 +211,11 @@ class _MainHomeState extends State<MainHome> {
         ),
         Expanded(
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 20,
+
               ),
               itemCount: items.length,
               itemBuilder: (BuildContext context, int index) {
@@ -173,26 +224,56 @@ class _MainHomeState extends State<MainHome> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Item(image:items[index]["image"] ,price: items[index]["price"],
-                      title: items[index]["title"] , des: items[index]["des"], post: items[index]["id"],
+                      MaterialPageRoute(builder: (context) => Item(id: items[index]['id'],
                       )),
                     );
                   },
                   child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    elevation: 4,
                     child: Column(
                       children: [
-                        Image.network(items[index]["image"],
-                            fit: BoxFit.fill, height: 100),
-                        Text(items[index]["title"]),
-                        Text("${items[index]["price"]} د.ع "),
+                        Image.network(
+                          items[index]['image'],
+                          height: MediaQuery.of(context).size.width / 3.5,
+                          fit: BoxFit.fill,
+                        ),
+                        ListTile(
+                          title:  SizedBox(
+                            //You can define in as your screen's size width,
+                            //or you can choose a double
+                            //ex:
+                            //width: 100,
+                            width: MediaQuery.of(context).size.width, //this is the total width of your screen
+                            child: Text(
+                              items[index]['title'],
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+
+                          subtitle:  Text(
+                            formattedTotalPrice(int.parse(items[index]['price'])) + ' د.ع ',
+                            style: TextStyle(fontSize: 15,color: Colors.black45),
+                          ),
+                        ),
                       ],
                     ),
                   ),
+
+
                 );
-                ;
+
               },
-            ))
+            )),
       ],
     );
+  }
+  String formattedTotalPrice(price) {
+    final formatter = NumberFormat('#,###', 'ar_IQ');
+    return formatter.format(price);
   }
 }

@@ -190,8 +190,10 @@ class _CartPageState extends State<CartPage> {
     print(response.body);
     if (response.body.toString().contains("Successfully")) {
       setState(() {
-        Navigator.pop(context);
+       // Navigator.pop(context);
         get_Items();
+
+
       });
     }
   }

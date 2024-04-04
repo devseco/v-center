@@ -1,27 +1,23 @@
+import 'package:aqua_nav_bar/aqua_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'Brands.dart';
 import 'Cart.dart';
 import 'MainHome.dart';
 import 'Profile.dart';
-import 'package:fancy_bottom_navigation_plus/fancy_bottom_navigation_plus.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
-
   @override
   State<Home> createState() => _HomeState();
 }
-
 class _HomeState extends State<Home> {
-  int _currentIndex = 0;
-
+  int currentIndex = 0;
   final List<Widget> _pages = [
     const MainHome(),
     const BrandsPage(),
     CartPage(),
     Profile(),
   ];
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -31,36 +27,45 @@ class _HomeState extends State<Home> {
           title: const Text("V-Center"),
           backgroundColor: const Color(0xfffbb448),
         ),
-        body: _pages[_currentIndex],
-        bottomNavigationBar: FancyBottomNavigationPlus(
-          barBackgroundColor: Color(0xfffbb448),
-          barheight: MediaQuery.of(context).size.height * 0.10,
-          titleStyle: TextStyle(color: Colors.black),
-          tabs: [
-            TabData(
-              icon: const Icon(Icons.home, color: Colors.white, size: 35),
-              title: "الرئيسية",
-            ),
-            TabData(
-              icon: const Icon(Icons.list, color: Colors.white, size: 35),
-              title: "الشركات",
-            ),
-            TabData(
-              icon: const Icon(Icons.shopping_cart, color: Colors.white, size: 35),
-              title: "سلة المشتريات",
-            ),
-            TabData(
-              icon: const Icon(Icons.person, color: Colors.white, size: 35),
-              title: "الملف الشخصي",
-            ),
-          ],
-          initialSelection: _currentIndex,
-          onTabChangedListener: (int position) {
+        body: _pages[currentIndex],
+        bottomNavigationBar: AquaNavBar(
+          currentIndex: currentIndex,
+          textSize: 15.0,
+          backgroundColor: const Color(0xfffbb448),
+          activeColor: Colors.white,
+          textColor: Colors.black,
+          onItemSelected: (index){
             setState(() {
-              _currentIndex = position;
+              currentIndex = index;
             });
           },
-        ),
+          barItems: [
+            BarItem(
+                title: "الرئيسية",
+                icon: const Icon(
+                  Icons.home,
+                  size: 30.0,
+                  color: Colors.black,
+                )),
+            BarItem(
+                title: "الفئات",
+                icon: const Icon(
+                  Icons.list_alt,
+                  size: 30.0,
+                )),
+            BarItem(
+                title: "السلة",
+                icon: const Icon(
+                  Icons.shopping_cart,
+                  size: 30.0,
+                )),
+            BarItem(
+                title: "الملف الشخصي",
+                icon: const Icon(
+                  Icons.person,
+                  size: 30.0,
+                )),
+          ], ),
       ),
     );
   }
