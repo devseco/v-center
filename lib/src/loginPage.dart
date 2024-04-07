@@ -1,10 +1,14 @@
 import 'dart:convert';
-import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce/src/signup.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 import '../Pages/Home.dart';
 import '../api/connect.dart';
 import 'Widget/bezierContainer.dart';
@@ -17,6 +21,8 @@ class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
+late SharedPreferences prefs;
+bool loading = false;
 TextEditingController _phone = new TextEditingController();
 TextEditingController _password = new TextEditingController();
 class _LoginPageState extends State<LoginPage> {
@@ -24,20 +30,17 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _entryField(String title, TextEditingController textEditingController ,{bool isPassword = false}) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
-          SizedBox(
+
+          const SizedBox(
             height: 10,
           ),
           Container(
             decoration: BoxDecoration(
-              color: Color(0xfff3f3f4),
+              color: const Color(0xfff3f3f4),
               borderRadius: BorderRadius.circular(10.0),
               border: Border.all(
                 color: Colors.grey,
@@ -49,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
               child: TextField(
                 controller: textEditingController,
                 obscureText: isPassword,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: InputBorder.none,
                   fillColor: Color(0xfff3f3f4),
                   filled: true,
@@ -66,30 +69,34 @@ class _LoginPageState extends State<LoginPage> {
   Widget _submitButton() {
     return GestureDetector(
       onTap: () {
-        print(1);
-        login();
+        if(_phone.text.isNotEmpty && _password.text.isNotEmpty){
+          login();
+        }else{
+
+        }
+
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
+        padding: const EdgeInsets.symmetric(vertical: 15),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
           boxShadow: <BoxShadow>[
             BoxShadow(
               color: Colors.grey.shade200,
-              offset: Offset(2, 4),
+              offset: const Offset(2, 4),
               blurRadius: 5,
               spreadRadius: 2,
             ),
           ],
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
             colors: [Color(0xfffbb448), Color(0xfff7892b)],
           ),
         ),
-        child: Text(
+        child: const Text(
           'تسجيل دخول',
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
@@ -99,8 +106,8 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _divider() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Row(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: const Row(
         children: <Widget>[
           SizedBox(
             width: 20,
@@ -134,14 +141,19 @@ class _LoginPageState extends State<LoginPage> {
   Widget _createAccountLabel() {
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignUpPage()));
+
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (BuildContext context) => SignUpPage(),
+          ),
+              (Route route) => false,
+        );
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 20),
-        padding: EdgeInsets.all(15),
+        margin: const EdgeInsets.symmetric(vertical: 20),
+        padding: const EdgeInsets.all(15),
         alignment: Alignment.bottomCenter,
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
@@ -172,20 +184,20 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       children: <Widget>[
         Container(
-          margin: EdgeInsets.symmetric(vertical: 10),
+          margin: const EdgeInsets.symmetric(vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
+              const Text(
                 "رقم الهاتف",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xfff3f3f4),
+                  color: const Color(0xfff3f3f4),
                   borderRadius: BorderRadius.circular(10.0),
                   border: Border.all(
                     color: Colors.grey,
@@ -197,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextField(
                     controller: _phone,
                     obscureText: false,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       fillColor: Color(0xfff3f3f4),
                       filled: true,
@@ -209,20 +221,20 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         Container(
-          margin: EdgeInsets.symmetric(vertical: 10),
+          margin: const EdgeInsets.symmetric(vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
+              const Text(
                 "كلمة السر",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Color(0xfff3f3f4),
+                  color: const Color(0xfff3f3f4),
                   borderRadius: BorderRadius.circular(10.0),
                   border: Border.all(
                     color: Colors.grey,
@@ -234,7 +246,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextField(
                     controller: _password,
                     obscureText: true,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       fillColor: Color(0xfff3f3f4),
                       filled: true,
@@ -248,35 +260,77 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
   }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ()async{
+      _phone.text = "";
+      _password.text = "";
+      prefs = await SharedPreferences.getInstance();
+      if(prefs.getString("id") != "" && prefs.getString("id") != null){
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (BuildContext context) => const Home(),
+            ),
+                (Route route) => false,
+          );
+      }else{
+        //Navigator.pop(context);
+      }
+    }();
+  }
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Directionality(textDirection: TextDirection.rtl, child:
     Scaffold(
-        body: Container(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+
+          },
+          child:  IconButton(
+            // Use the FaIcon Widget + FontAwesomeIcons class for the IconData
+              icon: FaIcon(FontAwesomeIcons.whatsapp , color: Colors.green,size: height * 0.04,),
+              onPressed: () {
+
+                launchWhatsAppUri();
+
+              }
+          ),
+        ),
+        body: SizedBox(
           height: height,
           child: Stack(
             children: <Widget>[
               Positioned(
                   top: -height * .15,
                   right: -MediaQuery.of(context).size.width * .4,
-                  child: BezierContainer()),
+                  child: const BezierContainer()),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+
                       SizedBox(height: height * .2),
                       _title(),
-                      SizedBox(height: 50),
+                      const Text("V-Center" , style:TextStyle(
+                        fontSize: 17
+                      )),
+                      const SizedBox(height: 30),
                       _emailPasswordWidget(),
-                      SizedBox(height: 20),
-                      _submitButton(),
+                      const SizedBox(height: 20),
+                      (loading)? Center(
+                          child: LoadingAnimationWidget.staggeredDotsWave(
+                            color: const Color(0xfffbb448),
+                            size: 50,
+                          )) : _submitButton(),
                       _divider(),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       _createAccountLabel(),
                     ],
                   ),
@@ -287,6 +341,9 @@ class _LoginPageState extends State<LoginPage> {
         )));
   }
   void login() async {
+    setState(() {
+      loading = true;
+    });
     var url1 = Uri.parse(
         Apis.Api  + 'login.php?phone='+ _phone.text.toString() + '&password=' + _password.text.toString()
     );
@@ -300,6 +357,9 @@ class _LoginPageState extends State<LoginPage> {
         type: QuickAlertType.warning,
         text: 'يرجى التواصل مع الدعم الفني لتاكيد حسابك',
       );
+      setState(() {
+        loading = false;
+      });
     }else if(data.toString().contains("رقم الهاتف")){
       QuickAlert.show(
         confirmBtnText: "رجوع",
@@ -308,12 +368,47 @@ class _LoginPageState extends State<LoginPage> {
         title: 'مشكلة في تسجيل الدخول',
         text: 'تاكد من المعلومات المدخلة',
       );
-    }else{
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
+      setState(() {
+        loading = false;
+      });
+    }else if(data.toString().contains("name")){
+      SharedPreferences sharedPreferences = await  SharedPreferences.getInstance();
+      sharedPreferences.setString("id", data["id"]);
+      sharedPreferences.setString("name", data["name"]);
+      sharedPreferences.setString("phone", data["phone"]);
+      sharedPreferences.setString("address", data["address"]);
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (BuildContext context) => const Home(),
+        ),
+            (Route route) => false,
       );
+      setState(() {
+        loading = false;
+      });
+
+    }else{
+      QuickAlert.show(
+        confirmBtnText: "رجوع",
+        context: context,
+        type: QuickAlertType.error,
+        title: 'مشكلة في تسجيل الدخول',
+        text: 'تاكد من المعلومات المدخلة',
+      );
+      setState(() {
+        loading = false;
+      });
     }
 
+
+  }
+  launchWhatsAppUri() async {
+    final link = const WhatsAppUnilink(
+      phoneNumber: '+9647752855594',
+      text: "Hey! I'm inquiring about the apartment listing",
+    );
+    // Convert the WhatsAppUnilink instance to a Uri.
+    // The "launch" method is part of "url_launcher".
+    await launch(link.asUri() as String);
   }
 }

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart' as intal;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/connect.dart';
 
@@ -16,9 +17,9 @@ class Item extends StatefulWidget {
   @override
   State<Item> createState() => _ItemState();
 }
-
+late SharedPreferences prefs;
 int selectedIndex = 0;
-
+String id = "";
 List items = [];
 bool loading = true;
 final List<double> prices = [
@@ -62,7 +63,12 @@ class _ItemState extends State<Item> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    loading = true;
     get_Items();
+    ()async{
+      prefs = await SharedPreferences.getInstance();
+      id = prefs.getString("id")!;
+    }();
   }
 
   @override
@@ -72,6 +78,8 @@ class _ItemState extends State<Item> {
         textDirection: TextDirection.rtl,
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
             actions: [
 
               Padding(
@@ -95,7 +103,7 @@ class _ItemState extends State<Item> {
               Container(
                 height: size.height / 2.5,
                 width: size.width,
-                child:  Image.network(items[0]['image'] , fit: BoxFit.cover,),
+                child:  Image.network(items[0]['image'] , fit: BoxFit.fill,),
               ),
               SizedBox(
                 height: 10,
@@ -177,7 +185,7 @@ class _ItemState extends State<Item> {
                     children: [
                       ElevatedButton(
                         onPressed: () {
-                         add_cart(items[0]['id'], "2", items[0]['image'], quantity.toString(), items[0]['title'], items[0]['price']);
+                         add_cart(items[0]['id'], id, items[0]['image'], quantity.toString(), items[0]['title'], items[0]['price']);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor:Colors.green,

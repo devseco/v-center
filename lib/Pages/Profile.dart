@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer_pro/shimmer_pro.dart';
 
 import '../api/connect.dart';
@@ -11,7 +12,9 @@ class Profile extends StatefulWidget {
   @override
   _ProfileState createState() => _ProfileState();
 }
-
+late SharedPreferences prefs;
+String id = "";
+String name = "";
 late Color  bgColor = Colors.grey;
 late ShimmerProLight shimmerlight = ShimmerProLight.darker;
 String formattedTotalPrice(price) {
@@ -23,9 +26,24 @@ String total_done = "0";
 String total_driver = "0";
 String total_loading = "0";
 bool loading = true;
+
 class _ProfileState extends State<Profile> {
-  Future<void> get_Items() async {
-    var url = Uri.parse(Apis.Api + 'bills.php?id=2&limit=4');
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ()async{
+      prefs = await SharedPreferences.getInstance();
+      name = prefs.getString("name")!;
+      id = prefs.getString("id")!;
+      get_Items(id);
+    }();
+
+  }
+  Future<void> get_Items(String idd) async {
+    var url = Uri.parse(Apis.Api + 'bills.php?id='+ idd +'&limit=4');
+    print(url);
     http.Response response = await http.get(url);
     print(response.body);
     var data = json.decode(response.body);
@@ -37,12 +55,6 @@ class _ProfileState extends State<Profile> {
       total_driver =  data['stats']['stat_dliver'].toString();
       total_loading =  data['stats']['stat_loading'].toString();
     });
-  }
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    get_Items();
   }
 
   int counter = 0;
@@ -72,7 +84,7 @@ class _ProfileState extends State<Profile> {
                           backgroundColor: Colors.white,
                         ),
                         SizedBox(height: 10.0,),
-                        Text('اسم المستخدم',
+                        Text(name,
                             style: TextStyle(
                               color:Colors.black,
                               fontSize: 20.0,

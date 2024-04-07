@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:suggestion_input_field/suggestion_input_field.dart';
 
 import '../api/connect.dart';
@@ -211,64 +208,57 @@ class _MainHomeState extends State<MainHome> {
         ),
         Expanded(
             child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 15,
-                mainAxisSpacing: 20,
-
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: MediaQuery.of(context).size.width > 600 ? 4 : 2, // تحديد عدد العناصر في الصف الواحد بناءً على عرض الشاشة
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
               ),
               itemCount: items.length,
               itemBuilder: (BuildContext context, int index) {
-                //Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewScreen()));
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Item(id: items[index]['id'],
-                      )),
+                      MaterialPageRoute(builder: (context) => Item(id: items[index]['id'])),
                     );
                   },
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    elevation: 4,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Image.network(
                           items[index]['image'],
-                          height: MediaQuery.of(context).size.width / 3.5,
+                          height: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.width > 600 ? 7 : 3.6), // تحديد ارتفاع الصورة بناءً على عرض الشاشة
                           fit: BoxFit.fill,
                         ),
                         ListTile(
-                          title:  SizedBox(
-                            //You can define in as your screen's size width,
-                            //or you can choose a double
-                            //ex:
-                            //width: 100,
-                            width: MediaQuery.of(context).size.width, //this is the total width of your screen
-                            child: Text(
-                              items[index]['title'],
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                              overflow: TextOverflow.ellipsis,
+                          title: Text(
+                            items[index]['title'],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
-
-                          subtitle:  Text(
+                          subtitle: Text(
                             formattedTotalPrice(int.parse(items[index]['price'])) + ' د.ع ',
-                            style: TextStyle(fontSize: 15,color: Colors.black45),
+                            style: TextStyle(fontSize: 15, color: Colors.black45),
                           ),
                         ),
                       ],
                     ),
                   ),
-
-
                 );
-
               },
-            )),
+            )
+
+        ),
       ],
     );
   }

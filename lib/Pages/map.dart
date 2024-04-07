@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapScreen extends StatefulWidget {
@@ -10,18 +11,30 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   Position? _currentPosition;
-  LatLng _first = LatLng( 37.785687,-122.406396);
-  LatLng _second = LatLng(37.786810, -122.405891);
-  LatLng _third = LatLng(37.786111, -122.405997);
+  LatLng _alhuria = LatLng(33.3541760,44.3394170);
+  LatLng _zafrania = LatLng(33.26082, 44.49870);
+  LatLng _adhamya = LatLng(33.36961, 44.36373);
   String _closestPoint = '';
 
   @override
   void initState() {
     super.initState();
+    checkPermissionStatus();
     _getCurrentLocation();
   }
+  void checkPermissionStatus() async{
+    var status = await Permission.locationWhenInUse.status;
+    if (status != PermissionStatus.granted) {
 
+      //show Dialog or route to specific page (or route to Application Manager)
+
+    }else{
+      // Go to Second Screen
+    }
+  }
   void _getCurrentLocation() async {
+    LocationPermission permission;
+    permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     setState(() {
@@ -47,9 +60,9 @@ class _MapScreenState extends State<MapScreen> {
     double minDistance = double.infinity;
     String closest = '';
     final Map<String, LatLng> points = {
-      'First Point': _first,
-      'Second Point': _second,
-      'Third Point': _third,
+      'First Point': _alhuria,
+      'Second Point': _zafrania,
+      'Third Point': _adhamya,
     };
 
     points.forEach((key, value) {
@@ -96,7 +109,7 @@ class _MapScreenState extends State<MapScreen> {
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
               onPressed: () {
-                _launchMapsUrl(_first.latitude,_first.longitude);
+                _launchMapsUrl(_alhuria.latitude,_alhuria.longitude);
               },
               child: Text('first'),
             ),
@@ -105,7 +118,7 @@ class _MapScreenState extends State<MapScreen> {
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
               onPressed: () {
-                _launchMapsUrl(_second.latitude,_second.longitude);
+                _launchMapsUrl(_zafrania.latitude,_zafrania.longitude);
               },
               child: Text('second'),
             ),
@@ -114,7 +127,7 @@ class _MapScreenState extends State<MapScreen> {
                 foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
               ),
               onPressed: () {
-                _launchMapsUrl(_third.latitude,_third.longitude);
+                _launchMapsUrl(_adhamya.latitude,_adhamya.longitude);
               },
               child: Text('Third'),
             ),

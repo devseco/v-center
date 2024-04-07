@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer_pro/shimmer_pro.dart';
 
 import '../api/connect.dart';
@@ -14,8 +15,14 @@ class CartPage extends StatefulWidget {
   @override
   _CartPageState createState() => _CartPageState();
 }
+bool checkedValue = false;
 List items = [];
 bool loading = true;
+late SharedPreferences prefs;
+String id = "";
+String name = "";
+String phone = "";
+String address = "";
 class _CartPageState extends State<CartPage> {
 
   late Color  bgColor = Colors.grey;
@@ -26,32 +33,38 @@ class _CartPageState extends State<CartPage> {
     final formatter = NumberFormat('#,###', 'ar_IQ');
     return formatter.format(price);
   }
-  Future<void> get_Items() async {
-    print(2);
-    var url = Uri.parse(Apis.Api + 'carts.php?id=2');
 
-    http.Response response = await http.get(url);
-    print(response.body);
-      var data = json.decode(response.body);
-
-      print(data);
-      setState(() {
-        items = data;
-       loading = false;
-      });
-  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    get_Items();
-    print(1);
+    ()async{
+      prefs = await SharedPreferences.getInstance();
+      id = prefs.getString("id")!;
+      phone = prefs.getString("phone")!;
+      address = prefs.getString("address")!;
+      name = prefs.getString("name")!;
+      get_Items(id);
+    }();
 
+  }
+  Future<void> get_Items(String id) async {
+    var url = Uri.parse(Apis.Api + 'carts.php?id=' + id);
+
+    http.Response response = await http.get(url);
+    print(response.body);
+    var data = json.decode(response.body);
+
+    print(data);
+    setState(() {
+      items = data;
+      loading = false;
+    });
   }
    void didChangeDependencies() {
      super.didChangeDependencies();
-     get_Items();
+     get_Items(id);
      print(1);
      // اكتب هنا الكود الخاص بتحميل البيانات
    }
@@ -126,8 +139,9 @@ class _CartPageState extends State<CartPage> {
             ),
 
           ),
+
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding:  EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -137,19 +151,22 @@ class _CartPageState extends State<CartPage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    QuickAlert.show(
+                    if(items.isNotEmpty){
+                      QuickAlert.show(
+                        title: "تأكيد الشراء",
+                        context: context,
+                        type: QuickAlertType.confirm,
+                        text: 'هل انت متأكد من اكمال الشراء',
+                        confirmBtnText: 'تاكيد',
+                        cancelBtnText: 'الغاء',
+                        confirmBtnColor: Colors.green,
+                        onConfirmBtnTap:(){
 
-                      title: "تأكيد الشراء",
-                      context: context,
-                      type: QuickAlertType.confirm,
-                      text: 'هل انت متأكد من اكمال الشراء',
-                      confirmBtnText: 'تاكيد',
-                      cancelBtnText: 'الغاء',
-                      confirmBtnColor: Colors.green,
-                      onConfirmBtnTap:(){
-                        Done('2','07712710192','alshaab','Ali Mohammed',totalPrice.toString());
-                      },
-                    );
+                          Done(id,phone,address,name,totalPrice.toString());
+                        },
+                      );
+                    }
+
                   },
                   child: Text('إتمام الشراء'),
                 ),
@@ -191,7 +208,7 @@ class _CartPageState extends State<CartPage> {
     if (response.body.toString().contains("Successfully")) {
       setState(() {
        // Navigator.pop(context);
-        get_Items();
+        get_Items(id);
 
 
       });

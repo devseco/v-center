@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:ecommerce/Pages/Cats.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shimmer_pro/shimmer_pro.dart';
 import '../api/connect.dart';
-import 'Items.dart';
 List items = [];
 bool loading = true;
 class BrandsPage extends StatefulWidget {

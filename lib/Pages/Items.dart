@@ -115,10 +115,11 @@ class _SparePartsPageState extends State<SparePartsPage> {
           ),
           ))
               :  Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  child: GridView.builder(
+                  padding: EdgeInsets.only(left: 5,right: 5),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 15,
+                  crossAxisSpacing: 10,
                   mainAxisSpacing: 20,
                 ),
                 itemCount: filteredProducts.length,
@@ -132,10 +133,14 @@ class _SparePartsPageState extends State<SparePartsPage> {
                         )),
                       );
                     },
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25)),
-                      elevation: 4,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(20))
+                      ),
+                      height: MediaQuery.of(context).size.height * 0.3, // نسبة مئوية هنا
                       child: Column(
                         children: [
                           Image.network(
@@ -145,11 +150,7 @@ class _SparePartsPageState extends State<SparePartsPage> {
                           ),
                           ListTile(
                             title:  SizedBox(
-                              //You can define in as your screen's size width,
-                              //or you can choose a double
-                              //ex:
-                              //width: 100,
-                              width: MediaQuery.of(context).size.width, //this is the total width of your screen
+                              width: MediaQuery.of(context).size.width,
                               child: Text(
                                 filteredProducts[index].name,
                                 style: TextStyle(
@@ -168,9 +169,9 @@ class _SparePartsPageState extends State<SparePartsPage> {
                       ),
                     ),
                   );
-                  ;
                 },
-              )),
+              )
+          ),
         ],
       ),
     ));
