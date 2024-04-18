@@ -6,63 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:suggestion_input_field/suggestion_input_field.dart';
-
 import '../api/connect.dart';
 import 'Item.dart';
 class MainHome extends StatefulWidget {
   const MainHome({super.key});
-
   @override
   State<MainHome> createState() => _MainHomeState();
 }
-final TextEditingController _controller = TextEditingController();
 int selectedIndex = 0;
-final List<String> imgList = [
-  'https://pbs.twimg.com/media/FNWKfidWQAIP3Jt.jpg:large',
-  'https://fdn.gsmarena.com/imgroot/news/19/07/thats-iphone-ads-july/-1220x526/gsmarena_005.jpg',
-  'https://i.ytimg.com/vi/6Ij9PiehENA/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBCpOS4ENRW1V6JLnNMfLwEjIZqsw',
-  'https://newsy.elsob7.com/wp-content/uploads/2024/01/Samsung-Galaxy-S24-Ultra.jpg'
-];
-
-final List<Map<String, dynamic>> myProducts = [
-  {
-    "imageUrl":
-    "https://media.croma.com/image/upload/v1662703724/Croma%20Assets/Communication/Mobiles/Images/261934_qgssvy.png",
-    "name": "iPhone 14 Pro max",
-    "price": 19.99,
-  },
-  {
-    "imageUrl":
-    "https://media.croma.com/image/upload/v1662703724/Croma%20Assets/Communication/Mobiles/Images/261934_qgssvy.png",
-    "name": "iPhone 14 Pro max",
-    "price": 19.99,
-  },
-  {
-    "imageUrl":
-    "https://media.croma.com/image/upload/v1662703724/Croma%20Assets/Communication/Mobiles/Images/261934_qgssvy.png",
-    "name": "iPhone 14 Pro max",
-    "price": 19.99,
-  },
-  {
-    "imageUrl":
-    "https://media.croma.com/image/upload/v1662703724/Croma%20Assets/Communication/Mobiles/Images/261934_qgssvy.png",
-    "name": "iPhone 14 Pro max",
-    "price": 19.99,
-  },
-  {
-    "imageUrl":
-    "https://media.croma.com/image/upload/v1662703724/Croma%20Assets/Communication/Mobiles/Images/261934_qgssvy.png",
-    "name": "iPhone 14 Pro max",
-    "price": 19.99,
-  },
-  {
-    "imageUrl":
-    "https://media.croma.com/image/upload/v1662703724/Croma%20Assets/Communication/Mobiles/Images/261934_qgssvy.png",
-    "name": "iPhone 14 Pro max",
-    "price": 19.99,
-  },
-  // Add more products as needed
-];
 List sliders = [];
 List items = [];
 List prodects = [];
@@ -73,10 +24,8 @@ class Customer {
 }
 Customer? selectedCustomer;
 class _MainHomeState extends State<MainHome> {
-
   Future<void> getSlider() async {
     var url = Uri.parse(Apis.Api + 'home.php');
-
     http.Response response = await http.get(url);
     if(response.statusCode == 200){
       var data = json.decode(response.body);
@@ -90,8 +39,6 @@ class _MainHomeState extends State<MainHome> {
       });
     }
   }
-
-
   @override
   void initState() {
     // TODO: implement initState
@@ -99,19 +46,14 @@ class _MainHomeState extends State<MainHome> {
     getSlider();
   }
   FutureOr<List<Customer>> fetchCustomerData(String filterText) async {
-    // تحويل قائمة المنتجات إلى قائمة من العملاء بناءً على بنية البيانات
     List<Customer> customers = prodects.map((product) {
       return Customer(id: product['id'], name: product['title']);
     }).toList();
-
-    // تطبيق عملية البحث على العملاء
     return customers
         .where((customer) =>
         customer.name.toLowerCase().contains(filterText.toLowerCase()))
         .toList();
   }
-
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -120,15 +62,18 @@ class _MainHomeState extends State<MainHome> {
         Padding(
             padding: EdgeInsets.all(10),
             child:  SuggestionTextField<Customer>(
-
-
-
               value: selectedCustomer,
               suggestionFetch: (textEditingValue) =>
                   fetchCustomerData(textEditingValue.text),
-
               textFieldContent: TextFieldContent(
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    width: 1,
+                    style: BorderStyle.solid,
+                  ), borderRadius: BorderRadius.circular(10.0),
+                ),
+                  prefixIcon: Icon(Icons.search),
                   labelText: 'اختار المنتج',
                 ),
               ),
@@ -156,13 +101,12 @@ class _MainHomeState extends State<MainHome> {
             ),
         ),
         (sliders.isNotEmpty)? SizedBox(
-          width: size.width ,
+          width: size.width / 1 ,
+          height: size.width / 2 ,
           child: CarouselSlider(
-
             options: CarouselOptions(autoPlay: true
               ,viewportFraction: 1,
             ),
-
             items: sliders
                 .map((item) => Container(
               decoration: BoxDecoration(
@@ -231,18 +175,19 @@ class _MainHomeState extends State<MainHome> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.network(
                           items[index]['image'],
-                          height: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.width > 600 ? 7 : 3.6), // تحديد ارتفاع الصورة بناءً على عرض الشاشة
+                          height:  size.height * 0.13,
                           fit: BoxFit.fill,
                         ),
                         ListTile(
                           title: Text(
                             items[index]['title'],
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w300,
+                              fontSize: size.height * 0.013,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),

@@ -30,28 +30,24 @@ class _HomeState extends State<Home> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("V-Center"),
-          backgroundColor: const Color(0xfffbb448),
+          centerTitle: true,
+          title:  Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("V-Center"),
+              Image.asset('assets/images/logo.png' , fit: BoxFit.fill,height: 40,width: 40,),
+            ],
+          ),
+          backgroundColor: Colors.transparent,
+          leading: Padding(padding: EdgeInsets.only(right: 20,top: 15),
+            child: GestureDetector(
+              onTap: (){
+                launchWhatsAppUri();
+              },
+              child: FaIcon(FontAwesomeIcons.whatsapp , color: Colors.black,),
+            ),
+          ),
           actions: [
-            Padding(padding: EdgeInsets.only(left: 20,top: 10),
-              child: GestureDetector(
-                onTap: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Sales()),
-                  );
-                },
-                child: FaIcon(FontAwesomeIcons.listCheck , color: Colors.black,),
-              ),
-            ),
-            Padding(padding: EdgeInsets.only(left: 20,top: 10),
-              child: GestureDetector(
-                onTap: (){
-                  launchWhatsAppUri();
-                },
-                child: FaIcon(FontAwesomeIcons.whatsapp , color: Colors.black,),
-              ),
-            ),
             Padding(padding: EdgeInsets.only(left: 10,top: 10),
               child: GestureDetector(
                 onTap: (){
@@ -63,44 +59,58 @@ class _HomeState extends State<Home> {
           ],
         ),
         body: _pages[currentIndex],
-        bottomNavigationBar: AquaNavBar(
-          currentIndex: currentIndex,
-          textSize: 15.0,
-          backgroundColor: const Color(0xfffbb448),
-          activeColor: Colors.white,
-          textColor: Colors.black,
-          onItemSelected: (index){
-            setState(() {
-              currentIndex = index;
-            });
-          },
-          barItems: [
-            BarItem(
-                title: "الرئيسية",
-                icon: const Icon(
-                  Icons.home,
-                  size: 30.0,
-                  color: Colors.black,
-                )),
-            BarItem(
-                title: "الفئات",
-                icon: const Icon(
-                  Icons.list_alt,
-                  size: 30.0,
-                )),
-            BarItem(
-                title: "السلة",
-                icon: const Icon(
-                  Icons.shopping_cart,
-                  size: 30.0,
-                )),
-            BarItem(
-                title: "الملف الشخصي",
-                icon: const Icon(
-                  Icons.person,
-                  size: 30.0,
-                )),
-          ], ),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                offset: Offset(0.0, 1.0), //(x,y)
+                blurRadius: 5.0,
+              ),
+            ],
+          ),
+          child: AquaNavBar(
+            currentIndex: currentIndex,
+            textSize: 14.0,
+            backgroundColor: Colors.transparent,
+            activeColor: Colors.black,
+            textColor: Colors.black,
+            onItemSelected: (index){
+              setState(() {
+                currentIndex = index;
+              });
+            },
+            barItems: [
+              BarItem(
+                  title: "الرئيسية",
+
+                  icon: const Icon(
+                    Icons.home_outlined,
+                    size: 30.0,
+                    color: Colors.black,
+                  )),
+              BarItem(
+                  title: "الفئات",
+                  icon: const Icon(
+                    Icons.category_outlined,
+                    size: 30.0,
+                  )),
+              BarItem(
+                  title: "السلة",
+                  icon: const Icon(
+                    Icons.shopping_cart_outlined,
+                    size: 30.0,
+                  )),
+              BarItem(
+                  title: "الملف الشخصي",
+                  icon: const Icon(
+                    Icons.person_outlined,
+                    size: 30.0,
+                  )),
+            ], ),
+        ),
       ),
     );
   }

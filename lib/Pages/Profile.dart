@@ -73,7 +73,7 @@ class _ProfileState extends State<Profile> {
                 child:Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color:  Color(0xfffbb448),
+                    color: Colors.transparent,
                   ),
                   child: Column(
                       children: [
