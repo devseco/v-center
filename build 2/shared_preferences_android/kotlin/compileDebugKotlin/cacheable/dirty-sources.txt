@@ -1,0 +1,3 @@
+/Users/mac/.pub-cache/hosted/pub.dev/shared_preferences_android-2.4.8/android/src/main/kotlin/io/flutter/plugins/sharedpreferences/StringListObjectInputStream.kt
+/Users/mac/.pub-cache/hosted/pub.dev/shared_preferences_android-2.4.8/android/src/main/kotlin/io/flutter/plugins/sharedpreferences/MessagesAsync.g.kt
+/Users/mac/.pub-cache/hosted/pub.dev/shared_preferences_android-2.4.8/android/src/main/kotlin/io/flutter/plugins/sharedpreferences/SharedPreferencesPlugin.kt

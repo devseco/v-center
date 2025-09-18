@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Ecommerce</string>
+	<string>V-Center</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>ecommerce</string>
+	<string>V-Center</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -27,9 +27,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This application requires location services to work</string>
+	<string>نحتاج إلى الوصول إلى موقعك الجغرافي لتحديد عنوانك أثناء التسجيل وتوفير خدمة التوصيل المناسبة لك.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This application requires location services to work</string>
+	<string>نحتاج إلى الوصول إلى موقعك الجغرافي لتحديد عنوانك أثناء التسجيل وتوفير خدمة التوصيل المناسبة لك.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>نحتاج إلى الوصول إلى جهات الاتصال لإرسال دعوات إلى أصدقائك والانضمام إلى مجموعتك.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -49,11 +51,16 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	 <key>NSAppTransportSecurity</key>
-     <dict>
-       <key>NSAllowsArbitraryLoads</key>
-       <true/>
-     </dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>نحتاج للوصول إلى مكتبة الصور من أجل حفظ صور المنتجات وتحديث صورة الملف الشخصي</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>نحتاج إلى الوصول إلى موقعك الجغرافي لتحديد عنوانك أثناء التسجيل وتوفير خدمة التوصيل المناسبة لك.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>نحتاج للوصول إلى الكاميرا لالتقاط صور المنتجات وتحديث صورة الملف الشخصي</string>
 </dict>
-
 </plist>

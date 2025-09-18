@@ -1,0 +1,2 @@
+/Users/mac/Desktop/Archive/v-center/android/app/.cxx/Debug/6j6s4p26/x86/CMakeFiles/edit_cache.dir
+/Users/mac/Desktop/Archive/v-center/android/app/.cxx/Debug/6j6s4p26/x86/CMakeFiles/rebuild_cache.dir
